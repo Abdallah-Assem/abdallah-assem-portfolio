@@ -2,99 +2,119 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Abdallah Assem — Full-Stack Developer</title>
 <meta name="description" content="Abdallah Assem — Full-Stack Developer specializing in ASP.NET Core, Angular, and SQL Server. Cairo, Egypt.">
 
-<!-- Fonts -->
+<!-- Prevent theme flash -->
+<script>
+  (function() {
+    const theme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-<!-- Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="grain-overlay"></div>
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
 
-<!-- ===== NAV ===== -->
-<nav class="site-nav" id="siteNav">
+<!-- Interactive Particle Background Canvas -->
+<canvas id="bgCanvas" class="bg-canvas"></canvas>
+
+<!-- Grain -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- Floating orbs background -->
+<div class="bg-orbs" aria-hidden="true">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+</div>
+
+<!-- ===== TOP NAV (desktop only) ===== -->
+<nav class="top-nav" id="topNav">
   <div class="nav-inner">
-    <a href="#top" class="nav-brand">
+    <a href="#top" class="brand" aria-label="Home">
       <span class="brand-mark">AA</span>
-      <span class="brand-name">Abdallah&nbsp;Assem</span>
+      <span class="brand-name">Abdallah Assem</span>
     </a>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#about" class="nav-link" data-nav>About</a></li>
-      <li><a href="#experience" class="nav-link" data-nav>Experience</a></li>
-      <li><a href="#projects" class="nav-link" data-nav>Projects</a></li>
-      <li><a href="#skills" class="nav-link" data-nav>Skills</a></li>
-      <li><a href="#education" class="nav-link" data-nav>Education</a></li>
-      <li><a href="#contact" class="nav-btn" data-nav>Contact</a></li>
-    </ul>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#about" data-nav class="nav-link">About</a></li>
+        <li><a href="#experience" data-nav class="nav-link">Experience</a></li>
+        <li><a href="#projects" data-nav class="nav-link">Projects</a></li>
+        <li><a href="#skills" data-nav class="nav-link">Skills</a></li>
+        <li><a href="#education" data-nav class="nav-link">Education</a></li>
+        <li><a href="#contact" data-nav class="nav-cta">Let's talk <i class="fa-solid fa-arrow-right"></i></a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+    </div>
   </div>
 </nav>
 
 <!-- ===== HERO ===== -->
 <header class="hero" id="top">
-  <div class="hero-bg" aria-hidden="true">
-    <div class="bg-grid"></div>
-    <div class="bg-glow"></div>
-  </div>
+  <div class="container hero-container">
+    <div class="hero-text">
+      <h1 class="hero-title">
+        <span class="line"><span class="word">Full-stack</span> <span class="word">developer,</span></span>
+        <span class="line"><span class="word accent">back-end</span> <span class="word accent">at</span> <span class="word accent">heart.</span></span>
+      </h1>
 
-  <div class="container">
-    <div class="row align-items-center hero-row">
-      <div class="col-lg-7">
-        <div class="eyebrow-row" data-reveal>
-          <span class="eyebrow-dot"></span>
-          <span class="eyebrow-text">AVAILABLE FOR BACK-END &amp; FULL-STACK ROLES</span>
-        </div>
+      <p class="hero-sub" data-reveal>
+        I'm Abdallah Assem, a Cairo-based developer specializing in
+        <strong>ASP.NET Core</strong>, <strong>Angular</strong> and <strong>SQL Server</strong>.
+        I currently build and maintain the reservation, pricing and financial systems
+        behind a production tour-operations platform.
+      </p>
 
-        <h1 class="hero-title" data-reveal>
-          Full-stack developer,<br>
-          <span class="hero-title-accent">back-end at heart.</span>
-        </h1>
-
-        <p class="hero-sub" data-reveal>
-          I'm Abdallah Assem, a Cairo-based developer specializing in
-          <strong>ASP.NET Core</strong>, <strong>Angular</strong> and <strong>SQL Server</strong>.
-          I currently build and maintain the reservation, pricing and financial systems
-          behind a production tour-operations platform.
-        </p>
-
-        <div class="hero-cta-row" data-reveal>
-          <a href="#projects" class="btn-primary-custom">View Projects <i class="fa-solid fa-arrow-right"></i></a>
-          <a href="mailto:abdallahassem3@gmail.com" class="btn-ghost-custom">Get in Touch</a>
-        </div>
-
-        <div class="hero-meta-row" data-reveal>
-          <div class="meta-item"><i class="fa-solid fa-location-dot"></i> Cairo, Egypt</div>
-          <div class="meta-item"><i class="fa-solid fa-briefcase"></i> Back-End Developer, Travel Solutions Egypt</div>
-        </div>
+      <div class="hero-cta" data-reveal>
+        <a href="#projects" class="btn-primary magnetic">
+          <span>View Projects</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="mailto:abdallahassem3@gmail.com" class="btn-ghost magnetic">
+          <span>Get in Touch</span>
+        </a>
       </div>
 
-      <div class="col-lg-5">
-        <div class="hero-photo-wrap" data-reveal>
-          <div class="hero-photo-frame">
-            <img src="sources/MyPhoto.jpeg" alt="Abdallah Assem" class="hero-photo">
-          </div>
-          <div class="hero-photo-tag">
-            <span class="tag-line-1">Abdallah Assem</span>
-            <span class="tag-line-2">Full-Stack Developer</span>
-          </div>
+      <div class="hero-meta" data-reveal>
+        <div class="meta"><i class="fa-solid fa-location-dot"></i> Cairo, Egypt</div>
+        <div class="meta"><i class="fa-solid fa-briefcase"></i> Back-End Developer · Travel Solutions Egypt</div>
+      </div>
+    </div>
+
+    <div class="hero-photo" data-reveal>
+      <div class="photo-stack">
+        <div class="photo-deco" aria-hidden="true"></div>
+        <div class="photo-frame">
+          <img src="sources/MyPhoto.jpeg" alt="Abdallah Assem — Full-Stack Developer">
+        </div>
+        <div class="photo-tag">
+          <span class="pt-name">Abdallah Assem</span>
+          <span class="pt-role">Full-Stack Developer</span>
+          <span class="pt-status"><span class="status-dot"></span> Open to work</span>
         </div>
       </div>
     </div>
   </div>
+
+  <a href="#about" class="scroll-cue" aria-label="Scroll to About">
+    <span>SCROLL</span>
+    <div class="scroll-line"></div>
+  </a>
 </header>
 
 <main>
@@ -102,12 +122,16 @@
   <!-- ===== ABOUT ===== -->
   <section class="section" id="about">
     <div class="container">
-      <div class="row gy-5 align-items-start">
-        <div class="col-lg-4" data-reveal>
-          <span class="section-eyebrow">About</span>
+      <div class="section-head" data-reveal>
+        <span class="section-num">01</span>
+        <span class="section-eyebrow">About</span>
+      </div>
+
+      <div class="row gy-4 gy-lg-0 align-items-start about-row">
+        <div class="col-lg-5" data-reveal>
           <h2 class="section-title">Grounded in production, built on fundamentals.</h2>
         </div>
-        <div class="col-lg-7 offset-lg-1" data-reveal>
+        <div class="col-lg-6 offset-lg-1" data-reveal>
           <p class="lead-text">
             I'm a Cairo-based full-stack developer with a foundation in Computers &amp; Artificial
             Intelligence from Helwan University, sharpened by an intensive .NET code camp at ITI.
@@ -121,20 +145,25 @@
             comfortable reasoning through a stored procedure and shipping a responsive UI —
             and I like projects where both sides meet.
           </p>
-          <div class="about-stats">
-            <div class="stat-block">
-              <span class="stat-num">3</span>
-              <span class="stat-label">Live modules shipped<br>at Travel Solutions Egypt</span>
-            </div>
-            <div class="stat-block">
-              <span class="stat-num">B1</span>
-              <span class="stat-label">Professional English<br>Native Arabic</span>
-            </div>
-            <div class="stat-block">
-              <span class="stat-num">2023</span>
-              <span class="stat-label">BSc. Computers &amp;<br>Artificial Intelligence</span>
-            </div>
-          </div>
+        </div>
+      </div>
+
+      <div class="about-stats" data-reveal>
+        <div class="stat-block">
+          <span class="stat-num" data-count="3">3</span>
+          <span class="stat-label">Live modules shipped at Travel Solutions Egypt</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-num">B1</span>
+          <span class="stat-label">Professional English · Native Arabic</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-num" data-count="2023">2023</span>
+          <span class="stat-label">BSc. Computers &amp; Artificial Intelligence</span>
+        </div>
+        <div class="stat-block">
+          <span class="stat-num" data-count="7">7</span>
+          <span class="stat-label">Projects shipped across web, desktop &amp; freelance</span>
         </div>
       </div>
     </div>
@@ -143,7 +172,10 @@
   <!-- ===== EXPERIENCE ===== -->
   <section class="section section-alt" id="experience">
     <div class="container">
-      <span class="section-eyebrow" data-reveal>Experience</span>
+      <div class="section-head" data-reveal>
+        <span class="section-num">02</span>
+        <span class="section-eyebrow">Experience</span>
+      </div>
       <h2 class="section-title" data-reveal>Where I've worked and trained.</h2>
 
       <div class="timeline">
@@ -154,7 +186,7 @@
           <div class="tl-content">
             <div class="tl-meta">
               <span class="tl-date">02.2026 — PRESENT</span>
-              <span class="tl-tag">Current</span>
+              <span class="tl-tag"><span class="tag-pulse"></span> Current</span>
             </div>
             <h3 class="tl-role">Back-End Developer — Travel Solutions Egypt</h3>
             <p class="tl-desc">
@@ -230,192 +262,203 @@
   <!-- ===== PROJECTS ===== -->
   <section class="section" id="projects">
     <div class="container">
-      <span class="section-eyebrow" data-reveal>Projects</span>
-      <h2 class="section-title" data-reveal>Selected work.</h2>
-      <p class="section-intro" data-reveal>
-        A mix of teamwork projects and independent builds.
-      </p>
- 
-      <div class="row g-4">
- 
-        <div class="col-md-6 col-lg-4" data-reveal>
-          <article class="proj-card">
-            <div class="proj-media" data-yt-id="RkNnOeorScQ">
-              <div class="proj-media-placeholder">
-                <i class="fa-solid fa-circle-play"></i>
-                <span>Demo video coming soon</span>
-              </div>
+      <div class="section-head" data-reveal>
+        <span class="section-num">03</span>
+        <span class="section-eyebrow">Projects</span>
+      </div>
+      <div class="projects-head">
+        <h2 class="section-title" data-reveal>Selected work.</h2>
+        <p class="projects-hint" data-reveal>
+          <i class="fa-solid fa-hand-pointer"></i> Swipe to explore
+        </p>
+      </div>
+
+      <div class="projects-track" id="projectsTrack">
+
+        <article class="proj-card" data-reveal>
+          <div class="proj-media" data-yt-id="RkNnOeorScQ">
+            <div class="proj-media-placeholder">
+              <i class="fa-solid fa-circle-play"></i>
+              <span>Demo coming soon</span>
             </div>
-            <div class="proj-body">
-              <div class="proj-head">
-                <span class="proj-kicker">Freelance · Fiverr</span>
-              </div>
-              <h3 class="proj-title">Limian Law</h3>
-              <p class="proj-desc">Premium SQE (UK law) education website built for the client's business — company intro and study method, programme packages linking through to Teachable for purchase and access, an FAQ page, and an inquiry/contact page.</p>
-              <div class="proj-stack">
-                <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Bootstrap</span>
-              </div>
-              <div class="proj-links">
-                <a href="https://limianlaw.com/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Site</a>
-              </div>
+          </div>
+          <div class="proj-body">
+            <div class="proj-kicker">Freelance · Fiverr</div>
+            <h3 class="proj-title">Limian Law</h3>
+            <p class="proj-desc">Premium SQE (UK law) education website — company intro and study method, programme packages linking through to Teachable, an FAQ page, and an inquiry/contact page.</p>
+            <div class="proj-stack">
+              <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Bootstrap</span>
             </div>
-          </article>
-        </div>
- 
-        <div class="col-md-6 col-lg-4" data-reveal>
-          <article class="proj-card">
-            <div class="proj-media" data-yt-id="9F6nqly3THQ">
-              <div class="proj-media-placeholder">
-                <i class="fa-solid fa-circle-play"></i>
-                <span>Demo video coming soon</span>
-              </div>
-            </div>
-            <div class="proj-body">
-              <div class="proj-head">
-                <span class="proj-kicker">ITI Graduation Project</span>
-              </div>
-              <h3 class="proj-title">Airbnb Clone</h3>
-              <p class="proj-desc">3-tier full-stack vacation rental platform — property listings, real-time bookings and guest-host messaging.</p>
-              <div class="proj-stack">
-                <span>ASP.NET Core 8</span><span>Angular 20+</span><span>EF Core</span><span>SignalR</span><span>Hangfire</span>
-              </div>
             <div class="proj-links">
-                <a href="https://github.com/Abdelkarimo/airbnb-clone" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
+              <a href="https://limianlaw.com/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Site</a>
             </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-reveal>
+          <div class="proj-media" data-yt-id="9F6nqly3THQ">
+            <div class="proj-media-placeholder">
+              <i class="fa-solid fa-circle-play"></i>
+              <span>Demo coming soon</span>
             </div>
-          </article>
-        </div>
- 
-        <div class="col-md-6 col-lg-4" data-reveal>
-          <article class="proj-card">
-            <div class="proj-media" data-yt-id="BqmbsqavO48">
-              <div class="proj-media-placeholder">
-                <i class="fa-solid fa-circle-play"></i>
-                <span>Demo video coming soon</span>
-              </div>
+          </div>
+          <div class="proj-body">
+            <div class="proj-kicker">ITI Graduation Project</div>
+            <h3 class="proj-title">Airbnb Clone</h3>
+            <p class="proj-desc">3-tier full-stack vacation rental platform — property listings, real-time bookings and guest-host messaging.</p>
+            <div class="proj-stack">
+              <span>ASP.NET Core 8</span><span>Angular 20+</span><span>EF Core</span><span>SignalR</span><span>Hangfire</span>
             </div>
-            <div class="proj-body">
-              <div class="proj-head">
-                <span class="proj-kicker">Graduation Project · Grade A+</span>
-              </div>
-              <h3 class="proj-title">Be Fit</h3>
-              <p class="proj-desc">Fitness web app for meal &amp; workout plans, calorie tracking and progress monitoring.</p>
-              <div class="proj-stack">
-                <span>ASP.NET Core</span><span>Web API</span><span>SQL Server</span>
-              </div>
-              <div class="proj-links">
-                <a href="https://github.com/Abdallah-Assem/Be-Fit-GP" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
-              </div>
+            <div class="proj-links">
+              <a href="https://github.com/Abdelkarimo/airbnb-clone" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
             </div>
-          </article>
-        </div>
- 
-        <div class="col-md-6 col-lg-4" data-reveal>
-  <article class="proj-card">
-    <div class="proj-media">
-      <img src="sources/ECommerceBanner.jpg" alt="E-Commerce Project Banner" class="proj-media-banner" style="width: 100%; height: auto; object-fit: cover;">
-    </div>
-    <div class="proj-body">
-      <div class="proj-head">
-        <span class="proj-kicker">Personal Project</span>
-      </div>
-      <h3 class="proj-title">E-Commerce</h3>
-      <p class="proj-desc">Angular storefront with product catalog, reviews, cart and local-storage-based persistence.</p>
-      <div class="proj-stack">
-        <span>Angular 20+</span><span>TypeScript</span><span>Bootstrap</span>
-      </div>
-      <div class="proj-links">
-        <a href="https://angularproject-green.vercel.app/home" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo</a>
-        <a href="https://github.com/AbdelrahmanKhalid710/E-Commerce-AngularFinalProject" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
-      </div>
-    </div>
-  </article>
-</div>
- 
-        <div class="col-md-6 col-lg-4" data-reveal>
-          <article class="proj-card">
-            <div class="proj-media" data-yt-id="fOjAFEeEX-Y">
-              <div class="proj-media-placeholder">
-                <i class="fa-solid fa-circle-play"></i>
-                <span>Demo video coming soon</span>
-              </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-reveal>
+          <div class="proj-media" data-yt-id="BqmbsqavO48">
+            <div class="proj-media-placeholder">
+              <i class="fa-solid fa-circle-play"></i>
+              <span>Demo coming soon</span>
             </div>
-            <div class="proj-body">
-              <div class="proj-head">
-                <span class="proj-kicker">Personal Project</span>
-              </div>
-              <h3 class="proj-title">Tasks Control</h3>
-              <p class="proj-desc">WinForms task manager with CRUD, filtering, sorting, categorization and status reporting.</p>
-              <div class="proj-stack">
-                <span>C#</span><span>EF Core</span><span>LINQ</span><span>SQL Server</span>
-              </div>
-              <div class="proj-links">
-                 <a href="https://github.com/Abdallah-Assem/Tasks-Control" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
-              </div>
+          </div>
+          <div class="proj-body">
+            <div class="proj-kicker">Graduation Project · Grade A+</div>
+            <h3 class="proj-title">Be Fit</h3>
+            <p class="proj-desc">Fitness web app for meal &amp; workout plans, calorie tracking and progress monitoring.</p>
+            <div class="proj-stack">
+              <span>ASP.NET Core</span><span>Web API</span><span>SQL Server</span>
             </div>
-          </article>
-        </div>
- 
-        <div class="col-md-6 col-lg-4" data-reveal>
-          <article class="proj-card">
-            <div class="proj-media" data-yt-id="">
-              <div class="proj-media-placeholder">
-                <i class="fa-solid fa-circle-play"></i>
-                <span>Demo video coming soon</span>
-              </div>
+            <div class="proj-links">
+              <a href="https://github.com/Abdallah-Assem/Be-Fit-GP" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
             </div>
-            <div class="proj-body">
-              <div class="proj-head">
-                <span class="proj-kicker">Personal Project</span>
-              </div>
-              <h3 class="proj-title">IMDb Clone</h3>
-              <p class="proj-desc">Movie listings, ratings and reviews with authentication and full database integration.</p>
-              <div class="proj-stack">
-                <span>ASP.NET MVC</span><span>EF</span><span>SQL Server</span>
-              </div>
-              <div class="proj-links">
-                <a href="https://github.com/Abdallah-Assem/IMDB-2022" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
-              </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-reveal>
+          <div class="proj-media">
+            <img src="sources/ECommerceBanner.jpg" alt="E-Commerce Project Banner" class="proj-media-banner">
+          </div>
+          <div class="proj-body">
+            <div class="proj-kicker">Personal Project</div>
+            <h3 class="proj-title">E-Commerce</h3>
+            <p class="proj-desc">Angular storefront with product catalog, reviews, cart and local-storage-based persistence.</p>
+            <div class="proj-stack">
+              <span>Angular 20+</span><span>TypeScript</span><span>Bootstrap</span>
             </div>
-          </article>
-        </div>
- 
-        <div class="col-md-6 col-lg-4" data-reveal>
-          <article class="proj-card">
-            <div class="proj-media" data-yt-id="4smqBEf1rzY">
-              <div class="proj-media-placeholder">
-                <i class="fa-solid fa-circle-play"></i>
-                <span>Demo video coming soon</span>
-              </div>
+            <div class="proj-links">
+              <a href="https://angularproject-green.vercel.app/home" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo</a>
+              <a href="https://github.com/AbdelrahmanKhalid710/E-Commerce-AngularFinalProject" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
             </div>
-            <div class="proj-body">
-              <div class="proj-head">
-                <span class="proj-kicker">Personal Project</span>
-              </div>
-              <h3 class="proj-title">Avengers Memory Game</h3>
-              <p class="proj-desc">Interactive memory card game with DOM manipulation, event handling and game-state management — responsive gameplay with animated card reveals.</p>
-              <div class="proj-stack">
-                <span>TypeScript</span><span>HTML</span><span>CSS</span>
-              </div>
-              <div class="proj-links">
-                <a href="https://abdallah-assem.github.io/Avengers-Memory-Game/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo</a>
-                <a href="https://github.com/Abdallah-Assem/Avengers-Memory-Game" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
-              </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-reveal>
+          <div class="proj-media" data-yt-id="fOjAFEeEX-Y">
+            <div class="proj-media-placeholder">
+              <i class="fa-solid fa-circle-play"></i>
+              <span>Demo coming soon</span>
             </div>
-          </article>
-        </div>
+          </div>
+          <div class="proj-body">
+            <div class="proj-kicker">Personal Project</div>
+            <h3 class="proj-title">Tasks Control</h3>
+            <p class="proj-desc">WinForms task manager with CRUD, filtering, sorting, categorization and status reporting.</p>
+            <div class="proj-stack">
+              <span>C#</span><span>EF Core</span><span>LINQ</span><span>SQL Server</span>
+            </div>
+            <div class="proj-links">
+              <a href="https://github.com/Abdallah-Assem/Tasks-Control" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-reveal>
+          <div class="proj-media" data-yt-id="">
+            <div class="proj-media-placeholder">
+              <i class="fa-solid fa-circle-play"></i>
+              <span>Demo coming soon</span>
+            </div>
+          </div>
+          <div class="proj-body">
+            <div class="proj-kicker">Personal Project</div>
+            <h3 class="proj-title">IMDb Clone</h3>
+            <p class="proj-desc">Movie listings, ratings and reviews with authentication and full database integration.</p>
+            <div class="proj-stack">
+              <span>ASP.NET MVC</span><span>EF</span><span>SQL Server</span>
+            </div>
+            <div class="proj-links">
+              <a href="https://github.com/Abdallah-Assem/IMDB-2022" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="proj-card" data-reveal>
+          <div class="proj-media" data-yt-id="4smqBEf1rzY">
+            <div class="proj-media-placeholder">
+              <i class="fa-solid fa-circle-play"></i>
+              <span>Demo coming soon</span>
+            </div>
+          </div>
+          <div class="proj-body">
+            <div class="proj-kicker">Personal Project</div>
+            <h3 class="proj-title">Avengers Memory Game</h3>
+            <p class="proj-desc">Interactive memory card game with DOM manipulation, event handling and game-state management — responsive gameplay with animated card reveals.</p>
+            <div class="proj-stack">
+              <span>TypeScript</span><span>HTML</span><span>CSS</span>
+            </div>
+            <div class="proj-links">
+              <a href="https://abdallah-assem.github.io/Avengers-Memory-Game/" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo</a>
+              <a href="https://github.com/Abdallah-Assem/Avengers-Memory-Game" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> Code</a>
+            </div>
+          </div>
+        </article>
+
       </div>
     </div>
   </section>
- 
+
   <!-- ===== SKILLS ===== -->
   <section class="section section-alt" id="skills">
     <div class="container">
-      <span class="section-eyebrow" data-reveal>Skills</span>
+      <div class="section-head" data-reveal>
+        <span class="section-num">04</span>
+        <span class="section-eyebrow">Skills</span>
+      </div>
       <h2 class="section-title" data-reveal>Technologies I work with.</h2>
+    </div>
 
-      <div class="row g-4">
-        <div class="col-md-6 col-lg-3" data-reveal>
+    <!-- Marquee ticker -->
+    <div class="marquee" data-reveal aria-hidden="true">
+      <div class="marquee-track">
+        <span>C#</span><span class="sep">✦</span>
+        <span>ASP.NET Core</span><span class="sep">✦</span>
+        <span>Angular</span><span class="sep">✦</span>
+        <span>TypeScript</span><span class="sep">✦</span>
+        <span>SQL Server</span><span class="sep">✦</span>
+        <span>EF Core</span><span class="sep">✦</span>
+        <span>SignalR</span><span class="sep">✦</span>
+        <span>Hangfire</span><span class="sep">✦</span>
+        <span>LINQ</span><span class="sep">✦</span>
+        <span>Bootstrap</span><span class="sep">✦</span>
+      </div>
+      <div class="marquee-track" aria-hidden="true">
+        <span>C#</span><span class="sep">✦</span>
+        <span>ASP.NET Core</span><span class="sep">✦</span>
+        <span>Angular</span><span class="sep">✦</span>
+        <span>TypeScript</span><span class="sep">✦</span>
+        <span>SQL Server</span><span class="sep">✦</span>
+        <span>EF Core</span><span class="sep">✦</span>
+        <span>SignalR</span><span class="sep">✦</span>
+        <span>Hangfire</span><span class="sep">✦</span>
+        <span>LINQ</span><span class="sep">✦</span>
+        <span>Bootstrap</span><span class="sep">✦</span>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row g-3 g-md-4">
+        <div class="col-6 col-lg-3" data-reveal>
           <div class="skill-card">
             <h3 class="skill-title"><i class="fa-solid fa-server"></i> Back-End</h3>
             <ul class="skill-list">
@@ -423,7 +466,7 @@
             </ul>
           </div>
         </div>
-        <div class="col-md-6 col-lg-3" data-reveal>
+        <div class="col-6 col-lg-3" data-reveal>
           <div class="skill-card">
             <h3 class="skill-title"><i class="fa-solid fa-display"></i> Front-End</h3>
             <ul class="skill-list">
@@ -431,7 +474,7 @@
             </ul>
           </div>
         </div>
-        <div class="col-md-6 col-lg-3" data-reveal>
+        <div class="col-6 col-lg-3" data-reveal>
           <div class="skill-card">
             <h3 class="skill-title"><i class="fa-solid fa-database"></i> Data</h3>
             <ul class="skill-list">
@@ -439,7 +482,7 @@
             </ul>
           </div>
         </div>
-        <div class="col-md-6 col-lg-3" data-reveal>
+        <div class="col-6 col-lg-3" data-reveal>
           <div class="skill-card">
             <h3 class="skill-title"><i class="fa-solid fa-toolbox"></i> Tools &amp; Practice</h3>
             <ul class="skill-list">
@@ -451,13 +494,16 @@
     </div>
   </section>
 
-  <!-- ===== EDUCATION ===== -->
+  <!-- ===== EDUCATION / CERTS ===== -->
   <section class="section" id="education">
     <div class="container">
-      <span class="section-eyebrow" data-reveal>Education &amp; Certifications</span>
+      <div class="section-head" data-reveal>
+        <span class="section-num">05</span>
+        <span class="section-eyebrow">Education &amp; Certifications</span>
+      </div>
       <h2 class="section-title" data-reveal>Continued learning.</h2>
 
-      <div class="row g-4">
+      <div class="row g-3 g-md-4">
         <div class="col-md-4" data-reveal>
           <div class="cert-card">
             <div class="cert-icon"><i class="fa-solid fa-shield-halved"></i></div>
@@ -496,29 +542,48 @@
   <section class="section contact-section" id="contact">
     <div class="container">
       <div class="contact-inner" data-reveal>
-        <span class="section-eyebrow">Contact</span>
-        <h2 class="section-title">Let's work together.</h2>
+        <div class="section-head section-head-center">
+          <span class="section-num">06</span>
+          <span class="section-eyebrow">Contact</span>
+        </div>
+        <h2 class="contact-title">Let's work<br><span class="accent">together.</span></h2>
         <p class="section-intro">
           Open to back-end and full-stack roles, and select freelance work.
           Based in Cairo — happy to work remote or on-site.
         </p>
 
         <div class="contact-links">
-          <a href="mailto:abdallahassem3@gmail.com" class="contact-link">
-            <i class="fa-solid fa-envelope"></i>
-            <span>abdallahassem3@gmail.com</span>
+          <a href="mailto:abdallahassem3@gmail.com" class="contact-link magnetic">
+            <span class="cl-icon"><i class="fa-solid fa-envelope"></i></span>
+            <span class="cl-text">
+              <span class="cl-label">Email</span>
+              <span class="cl-value">abdallahassem3@gmail.com</span>
+            </span>
+            <i class="fa-solid fa-arrow-right cl-arrow"></i>
           </a>
-          <a href="tel:01127211980" class="contact-link">
-            <i class="fa-solid fa-phone"></i>
-            <span>01127211980</span>
+          <a href="tel:01127211980" class="contact-link magnetic">
+            <span class="cl-icon"><i class="fa-solid fa-phone"></i></span>
+            <span class="cl-text">
+              <span class="cl-label">Phone</span>
+              <span class="cl-value">01127211980</span>
+            </span>
+            <i class="fa-solid fa-arrow-right cl-arrow"></i>
           </a>
-          <a href="https://www.linkedin.com/in/abdallah-assem" target="_blank" rel="noopener" class="contact-link">
-            <i class="fa-brands fa-linkedin"></i>
-            <span>linkedin.com/in/abdallah-assem</span>
+          <a href="https://www.linkedin.com/in/abdallah-assem" target="_blank" rel="noopener" class="contact-link magnetic">
+            <span class="cl-icon"><i class="fa-brands fa-linkedin"></i></span>
+            <span class="cl-text">
+              <span class="cl-label">LinkedIn</span>
+              <span class="cl-value">linkedin.com/in/abdallah-assem</span>
+            </span>
+            <i class="fa-solid fa-arrow-right cl-arrow"></i>
           </a>
-          <a href="https://github.com/Abdallah-Assem" target="_blank" rel="noopener" class="contact-link">
-            <i class="fa-brands fa-github"></i>
-            <span>github.com/Abdallah-Assem</span>
+          <a href="https://github.com/Abdallah-Assem" target="_blank" rel="noopener" class="contact-link magnetic">
+            <span class="cl-icon"><i class="fa-brands fa-github"></i></span>
+            <span class="cl-text">
+              <span class="cl-label">GitHub</span>
+              <span class="cl-value">github.com/Abdallah-Assem</span>
+            </span>
+            <i class="fa-solid fa-arrow-right cl-arrow"></i>
           </a>
         </div>
       </div>
@@ -529,10 +594,41 @@
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <span>&copy; <span id="year"></span> Abdallah Assem Abdallah — Cairo, Egypt</span>
-    <span class="footer-tag">Full-Stack Developer · ASP.NET Core · Angular · SQL Server</span>
+    <div class="footer-brand">
+      <span class="brand-mark">AA</span>
+      <div class="footer-text">
+        <span class="ft-1">Abdallah Assem Abdallah</span>
+        <span class="ft-2">© <span id="year"></span> · Cairo, Egypt</span>
+      </div>
+    </div>
+    <div class="footer-meta">
+      <span class="ft-clock"><i class="fa-regular fa-clock"></i> <span id="liveClock">--:--:--</span> Cairo</span>
+      <span class="ft-tag">Full-Stack Developer · ASP.NET Core · Angular · SQL Server</span>
+    </div>
   </div>
 </footer>
+
+<!-- ===== MOBILE BOTTOM NAV ===== -->
+<nav class="mobile-nav" id="mobileNav" aria-label="Primary">
+  <a href="#top" class="mobile-tab" data-nav data-nav-target="top">
+    <i class="fa-solid fa-house"></i><span>Home</span>
+  </a>
+  <a href="#about" class="mobile-tab" data-nav data-nav-target="about">
+    <i class="fa-solid fa-user"></i><span>About</span>
+  </a>
+  <a href="#projects" class="mobile-tab" data-nav data-nav-target="projects">
+    <i class="fa-solid fa-folder-open"></i><span>Work</span>
+  </a>
+  <a href="#skills" class="mobile-tab" data-nav data-nav-target="skills">
+    <i class="fa-solid fa-code"></i><span>Skills</span>
+  </a>
+  <a href="#contact" class="mobile-tab" data-nav data-nav-target="contact">
+    <i class="fa-solid fa-paper-plane"></i><span>Contact</span>
+  </a>
+  <button class="mobile-tab theme-toggle-mobile" id="mobileThemeToggle" aria-label="Toggle theme">
+    <i class="fa-solid fa-moon"></i><span>Theme</span>
+  </button>
+</nav>
 
 <button id="backToTop" class="back-to-top" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
 
