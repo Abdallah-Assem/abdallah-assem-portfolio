@@ -98,10 +98,57 @@ img { max-width: 100%; display: block; }
 /* =========================================================
    BACKGROUND FX
    ========================================================= */
-.bg-canvas {
-  position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0; pointer-events: none;
+/* ---- Code-lines background ---- */
+.code-bg {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none; overflow: hidden;
+  --cx: -999px; --cy: -999px; --hl-y: -999px;
+}
+.code-layer {
+  position: absolute; inset: 0; margin: 0;
+  padding: 24px 28px;
+  font: 400 13px/1.75 var(--font-mono);
+  white-space: pre; overflow: hidden;
+  column-width: 560px; column-gap: 48px; column-fill: auto;
+  background: none; border: 0; border-radius: 0;
+  -webkit-user-select: none; user-select: none;
+}
+/* dim base layer: always visible */
+.code-base { color: var(--ink-dim); opacity: 0.17; }
+.code-base span { color: inherit; }
+[data-theme="light"] .code-base { opacity: 0.26; }
+
+/* bright layer: syntax-coloured, only visible inside a soft circle around the cursor */
+.code-glow {
+  opacity: 0; transition: opacity 0.35s var(--ease-soft);
+  -webkit-mask-image: radial-gradient(circle 200px at var(--cx) var(--cy), #000 0%, rgba(0,0,0,0.55) 45%, transparent 100%);
+          mask-image: radial-gradient(circle 200px at var(--cx) var(--cy), #000 0%, rgba(0,0,0,0.55) 45%, transparent 100%);
+  color: var(--ink-mid);
+}
+.code-bg.is-active .code-glow { opacity: 0.8; }
+[data-theme="light"] .code-bg.is-active .code-glow { opacity: 0.95; }
+.tk-k { color: var(--accent-2); }
+.tk-s { color: var(--accent); }
+.tk-t { color: var(--ink-hi); }
+.tk-n { color: var(--accent-2); }
+.tk-c { color: var(--ink-dim); font-style: italic; }
+
+/* editor-style "current line" band that snaps to the line under the cursor */
+.code-hl-line {
+  position: absolute; left: 0; right: 0; top: 0; height: 22px;
+  transform: translateY(var(--hl-y));
+  background: rgba(var(--accent-rgb), 0.07);
+  opacity: 0; transition: opacity 0.35s var(--ease-soft);
+  -webkit-mask-image: radial-gradient(ellipse 420px 100% at var(--cx) 50%, #000, transparent);
+          mask-image: radial-gradient(ellipse 420px 100% at var(--cx) 50%, #000, transparent);
+}
+.code-bg.is-active .code-hl-line { opacity: 1; }
+
+@media (max-width: 768px) {
+  .code-layer { font-size: 11px; padding: 18px 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .code-glow, .code-hl-line { transition: none; }
 }
 
 .grain {
@@ -512,6 +559,7 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink-hi); margin: 0; 
 .section { padding: 100px 0; position: relative; z-index: 1; }
 .section-alt {
   background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
   border-top: 1px solid var(--line-soft);
   border-bottom: 1px solid var(--line-soft);
 }
@@ -1117,4 +1165,132 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--ink-hi); margin: 0; 
 @media (hover: none) {
   .proj-card:hover { transform: none; }
   .proj-card:active { transform: scale(0.99); }
+}
+
+/* =========================================================
+   TEXT BOXES
+   Glass panels behind text so it never fights the code background.
+   Same look as the rest of the cards: surface colour, hairline border,
+   soft shadow, and a blur that smears the code behind the box.
+   ========================================================= */
+.text-box,
+.tl-content {
+  position: relative;
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-card);
+}
+/* alternate sections are already tinted, so lift the box one step */
+.section-alt .text-box,
+.section-alt .tl-content {
+  background: var(--surface-2);
+  background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+}
+
+.text-box {
+  border-radius: var(--r-lg);
+  padding: clamp(22px, 4vw, 44px);
+}
+.text-box > :last-child,
+.tl-content > :last-child { margin-bottom: 0; }
+
+/* compact box that hugs a section heading */
+.text-box-head {
+  width: fit-content; max-width: 100%;
+  margin-bottom: 40px;
+  padding: clamp(18px, 3.2vw, 30px) clamp(20px, 4vw, 38px);
+}
+.text-box-head .projects-head { margin-bottom: 0; gap: 12px 40px; }
+
+/* timeline entries become cards */
+.tl-content {
+  border-radius: var(--r-md);
+  padding: 22px 24px;
+}
+
+/* items that already have their own surface need a different tone inside a box */
+.text-box .contact-link { background: var(--surface-2); }
+.text-box + .about-stats { margin-top: 24px; }
+
+/* keep the tech ticker and footer readable too */
+.marquee { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.site-footer {
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+}
+
+@media (max-width: 576px) {
+  .tl-content { padding: 18px 18px; }
+  .text-box-head { margin-bottom: 28px; }
+}
+
+/* =========================================================
+   TEXT BOXES v2: editor windows + highlighted headings
+   ========================================================= */
+
+/* Big blocks (hero, about, contact) look like an editor window:
+   title bar with three dots and a file name. */
+.text-box[data-file] {
+  border-radius: var(--r-md);
+  padding-top: calc(40px + clamp(20px, 3.5vw, 36px));
+}
+.text-box[data-file]::before {
+  content: attr(data-file);
+  position: absolute; top: 0; left: 0; right: 0; height: 40px;
+  display: flex; align-items: center;
+  padding-left: 78px;
+  font: 500 12px var(--font-mono); letter-spacing: 0.04em;
+  color: var(--ink-dim);
+  background: color-mix(in srgb, var(--surface-2) 92%, transparent);
+  border-bottom: 1px solid var(--line);
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  pointer-events: none;
+}
+.text-box[data-file]::after {
+  content: "";
+  position: absolute; top: 15px; left: 18px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 18px 0 0 #E3B341, 36px 0 0 var(--accent);
+  opacity: 0.85; pointer-events: none;
+}
+
+/* Section headings: no box. A teal bar on the left and a soft panel
+   that fades out to the right, like a highlighted line in an editor. */
+.text-box.text-box-head,
+.section-alt .text-box.text-box-head {
+  background: none;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  border: 0; border-left: 3px solid var(--accent);
+  border-radius: 0; box-shadow: none;
+  isolation: isolate;
+  padding: 16px 28px 16px 22px;
+  --head-bg: var(--bg);
+}
+.section-alt .text-box.text-box-head {
+  --head-bg: color-mix(in srgb, var(--surface) 80%, var(--bg));
+}
+.text-box-head::before {
+  content: "";
+  position: absolute; z-index: -1; top: 0; bottom: 0; left: 0; right: -90px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--head-bg) 94%, transparent) 0%,
+    color-mix(in srgb, var(--head-bg) 90%, transparent) 70%,
+    transparent 100%);
+  pointer-events: none;
+}
+.text-box-head .section-head { margin-bottom: 10px; }
+
+@media (max-width: 576px) {
+  .text-box[data-file] { padding-top: calc(36px + 20px); }
+  .text-box[data-file]::before { height: 36px; padding-left: 68px; font-size: 11px; }
+  .text-box[data-file]::after {
+    top: 13px; left: 14px; width: 9px; height: 9px;
+    box-shadow: 16px 0 0 #E3B341, 32px 0 0 var(--accent);
+  }
+  .text-box.text-box-head { padding: 12px 18px 12px 16px; }
 }
