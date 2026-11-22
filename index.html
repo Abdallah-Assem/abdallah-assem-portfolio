@@ -28,8 +28,12 @@
 <!-- Scroll progress -->
 <div class="scroll-progress" id="scrollProgress"></div>
 
-<!-- Interactive Particle Background Canvas -->
-<canvas id="bgCanvas" class="bg-canvas"></canvas>
+<!-- Code-lines background (highlights around the cursor) -->
+<div class="code-bg" id="codeBg" aria-hidden="true">
+  <pre class="code-layer code-base" id="codeBase"></pre>
+  <div class="code-hl-line" id="codeHlLine"></div>
+  <pre class="code-layer code-glow" id="codeGlow"></pre>
+</div>
 
 <!-- Grain -->
 <div class="grain" aria-hidden="true"></div>
@@ -67,7 +71,7 @@
 <!-- ===== HERO ===== -->
 <header class="hero" id="top">
   <div class="container hero-container">
-    <div class="hero-text">
+    <div class="hero-text text-box" data-file="hero.cs">
       <h1 class="hero-title">
         <span class="line"><span class="word">Full-stack</span> <span class="word">developer,</span></span>
         <span class="line"><span class="word accent">back-end</span> <span class="word accent">at</span> <span class="word accent">heart.</span></span>
@@ -122,6 +126,7 @@
   <!-- ===== ABOUT ===== -->
   <section class="section" id="about">
     <div class="container">
+      <div class="text-box" data-file="about.cs" data-reveal>
       <div class="section-head" data-reveal>
         <span class="section-num">01</span>
         <span class="section-eyebrow">About</span>
@@ -147,6 +152,7 @@
           </p>
         </div>
       </div>
+      </div>
 
       <div class="about-stats" data-reveal>
         <div class="stat-block">
@@ -162,7 +168,7 @@
           <span class="stat-label">BSc. Computers &amp; Artificial Intelligence</span>
         </div>
         <div class="stat-block">
-          <span class="stat-num" data-count="8">8</span>
+          <span class="stat-num" data-count="7">7</span>
           <span class="stat-label">Projects shipped across web, desktop &amp; freelance</span>
         </div>
       </div>
@@ -172,11 +178,13 @@
   <!-- ===== EXPERIENCE ===== -->
   <section class="section section-alt" id="experience">
     <div class="container">
+      <div class="text-box text-box-head" data-reveal>
       <div class="section-head" data-reveal>
         <span class="section-num">02</span>
         <span class="section-eyebrow">Experience</span>
       </div>
       <h2 class="section-title" data-reveal>Where I've worked and trained.</h2>
+      </div>
 
       <div class="timeline">
         <div class="timeline-line" aria-hidden="true"></div>
@@ -262,6 +270,7 @@
   <!-- ===== PROJECTS ===== -->
   <section class="section" id="projects">
     <div class="container">
+      <div class="text-box text-box-head" data-reveal>
       <div class="section-head" data-reveal>
         <span class="section-num">03</span>
         <span class="section-eyebrow">Projects</span>
@@ -272,24 +281,10 @@
           <i class="fa-solid fa-hand-pointer"></i> Swipe to explore
         </p>
       </div>
+      </div>
 
       <div class="projects-track" id="projectsTrack">
-      <article class="proj-card" data-reveal>
-        <div class="proj-media">
-          <img src="sources/MarvelTrackerBanner.jpg" alt="Marvel Tracker home page with the countdown to Avengers: Doomsday and the watch-order list" class="proj-media-banner">
-        </div>
-        <div class="proj-body">
-          <div class="proj-kicker">Personal Project</div>
-          <h3 class="proj-title">Marvel Tracker</h3>
-          <p class="proj-desc">Free, unofficial fan guide that lists 144 Marvel films and series in watch order, with progress tracking, a countdown to Avengers: Doomsday and a details page for every title.</p>
-          <div class="proj-stack">
-            <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Bootstrap 5</span><span>localStorage</span><span>Cloudflare Pages</span>
-          </div>
-          <div class="proj-links">
-            <a href="https://marveltracker.pages.dev" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Site</a>
-          </div>
-        </div>
-        </article>
+
         <article class="proj-card" data-reveal>
           <div class="proj-media" data-yt-id="RkNnOeorScQ">
             <div class="proj-media-placeholder">
@@ -436,11 +431,13 @@
   <!-- ===== SKILLS ===== -->
   <section class="section section-alt" id="skills">
     <div class="container">
+      <div class="text-box text-box-head" data-reveal>
       <div class="section-head" data-reveal>
         <span class="section-num">04</span>
         <span class="section-eyebrow">Skills</span>
       </div>
       <h2 class="section-title" data-reveal>Technologies I work with.</h2>
+      </div>
     </div>
 
     <!-- Marquee ticker -->
@@ -512,11 +509,13 @@
   <!-- ===== EDUCATION / CERTS ===== -->
   <section class="section" id="education">
     <div class="container">
+      <div class="text-box text-box-head" data-reveal>
       <div class="section-head" data-reveal>
         <span class="section-num">05</span>
         <span class="section-eyebrow">Education &amp; Certifications</span>
       </div>
       <h2 class="section-title" data-reveal>Continued learning.</h2>
+      </div>
 
       <div class="row g-3 g-md-4">
         <div class="col-md-4" data-reveal>
@@ -556,7 +555,7 @@
   <!-- ===== CONTACT ===== -->
   <section class="section contact-section" id="contact">
     <div class="container">
-      <div class="contact-inner" data-reveal>
+      <div class="contact-inner text-box" data-file="contact.cs" data-reveal>
         <div class="section-head section-head-center">
           <span class="section-num">06</span>
           <span class="section-eyebrow">Contact</span>
