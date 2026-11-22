@@ -229,105 +229,172 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { passive: true });
   }
 
-  /* ---- Interactive Particle Background Canvas ---- */
-  const canvas = document.getElementById('bgCanvas');
-  if (canvas && !prefersReducedMotion) {
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let mouse = { x: null, y: null, radius: 150 };
+  /* ---- Code-lines background (highlights around the cursor) ---- */
+  const codeBg = document.getElementById("codeBg");
+  const codeBase = document.getElementById("codeBase");
+  const codeGlow = document.getElementById("codeGlow");
+  const codeHlLine = document.getElementById("codeHlLine");
 
-    function getAccentRGB() {
-      const style = getComputedStyle(document.documentElement);
-      const accent = style.getPropertyValue('--accent-rgb').trim();
-      return accent || '100, 255, 218';
+  if (codeBg && codeBase && codeGlow) {
+    // Decorative code built from the stack on the CV (lines kept short so they fit a column)
+    const BLOCKS = [
+      [
+        '// Abdallah Assem · Cairo, Egypt',
+        'var abdallah = new Developer',
+        '{',
+        '    Name = "Abdallah Assem",',
+        '    Role = "Full-Stack Developer",',
+        '    Stack = new[]',
+        '    {',
+        '        "C#", "ASP.NET Core", "Angular", "SQL Server"',
+        '    },',
+        '    Current = new Job',
+        '    {',
+        '        Title = "Back-End Developer",',
+        '        Company = "Travel Solutions Egypt",',
+        '        Since = "02/2026"',
+        '    },',
+        '    Education = "BSc. Computers & AI, Helwan University",',
+        '    Projects = new[]',
+        '    {',
+        '        "ITOMS", "Accounting Tool", "The Broker",',
+        '        "Be Fit", "Marvel Tracker", "Limian Law"',
+        '    },',
+        '    OpenToWork = true',
+        '};'
+      ],
+      [
+        '// Program.cs',
+        'var builder = WebApplication.CreateBuilder(args);',
+        '',
+        'builder.Services.AddDbContext<AppDbContext>(o =>',
+        '    o.UseSqlServer(connectionString));',
+        '',
+        'builder.Services',
+        '    .AddIdentity<AppUser, IdentityRole>()',
+        '    .AddEntityFrameworkStores<AppDbContext>();',
+        '',
+        'builder.Services.AddHangfire(c =>',
+        '    c.UseSqlServerStorage(connectionString));',
+        'builder.Services.AddHangfireServer();',
+        'builder.Services.AddSignalR();',
+        'builder.Services.AddControllersWithViews();',
+        '',
+        'var app = builder.Build();',
+        '',
+        'app.UseAuthentication();',
+        'app.UseAuthorization();',
+        'app.MapHub<ChatHub>("/chat");',
+        'app.MapDefaultControllerRoute();',
+        'app.Run();'
+      ],
+      [
+        '// ReservationService.cs',
+        'public async Task<List<ReservationDto>> GetPendingAsync()',
+        '{',
+        '    return await _db.Reservations',
+        '        .Where(r => r.Status == Status.Pending)',
+        '        .OrderBy(r => r.TravelDate)',
+        '        .Select(r => new ReservationDto(r))',
+        '        .ToListAsync();',
+        '}',
+        '',
+        'public async Task SettleAsync(int id, decimal amount)',
+        '{',
+        '    var advance = await _db.CashAdvances.FindAsync(id);',
+        '    advance.Settled += amount;',
+        '    await _db.SaveChangesAsync();',
+        '}'
+      ],
+      [
+        '// projects.component.ts',
+        '@Component({',
+        '  selector: "app-projects",',
+        '  standalone: true,',
+        '  templateUrl: "./projects.component.html"',
+        '})',
+        'export class ProjectsComponent implements OnInit {',
+        '  projects = signal<Project[]>([]);',
+        '',
+        '  constructor(private api: ProjectService) {}',
+        '',
+        '  ngOnInit() {',
+        '    this.api.getAll().subscribe(data =>',
+        '      this.projects.set(data));',
+        '  }',
+        '}'
+      ]
+    ];
+
+    const KEYWORDS = "using|var|new|public|private|class|return|await|async|static|if|else|true|false|null|this|void|int|decimal|string|export|implements|constructor|const|let|standalone";
+    const TOKEN = new RegExp('("[^"]*")|(\\b(?:' + KEYWORDS + ')\\b)|(\\b[A-Z][A-Za-z0-9_]*\\b)|(\\b\\d+(?:\\.\\d+)?\\b)', 'g');
+    const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    function highlight(line) {
+      const ci = line.indexOf("//");
+      const code = ci >= 0 ? line.slice(0, ci) : line;
+      const comment = ci >= 0 ? line.slice(ci) : "";
+      const html = esc(code).replace(TOKEN, (m, str, kw, type, num) => {
+        if (str)  return '<span class="tk-s">' + str + '</span>';
+        if (kw)   return '<span class="tk-k">' + kw + '</span>';
+        if (type) return '<span class="tk-t">' + type + '</span>';
+        return '<span class="tk-n">' + num + '</span>';
+      });
+      return html + (comment ? '<span class="tk-c">' + esc(comment) + '</span>' : "");
     }
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
+    let lineH = 22.75, padTop = 24;
 
-    class Particle {
-      constructor() {
-        this.reset();
+    function buildCode() {
+      const cs = getComputedStyle(codeBase);
+      lineH = parseFloat(cs.lineHeight) || 22.75;
+      padTop = parseFloat(cs.paddingTop) || 24;
+      codeHlLine.style.height = lineH + "px";
+
+      const rows = Math.ceil(window.innerHeight / lineH) + 2;
+      const cols = Math.max(1, Math.floor((window.innerWidth + 48) / (560 + 48)));
+      const total = rows * (cols + 1);
+
+      const lines = [];
+      let b = 0;
+      while (lines.length < total) {
+        lines.push(...BLOCKS[b % BLOCKS.length], "");
+        b++;
       }
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 1;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.5 - 0.25;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-      }
-      draw(rgb) {
-        ctx.fillStyle = `rgba(${rgb}, 0.8)`;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
+      const html = lines.slice(0, total).map(highlight).join("\n");
+      codeBase.innerHTML = html;
+      codeGlow.innerHTML = html;
     }
 
-    function initParticles() {
-      particles = [];
-      const numParticles = (canvas.width * canvas.height) / 15000;
-      for (let i = 0; i < numParticles; i++) particles.push(new Particle());
-    }
+    buildCode();
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(buildCode, 200);
+    });
 
-    function connectParticles(rgb) {
-      let opacity = 1;
-      for (let a = 0; a < particles.length; a++) {
-        for (let b = a; b < particles.length; b++) {
-          const dx = particles[a].x - particles[b].x;
-          const dy = particles[a].y - particles[b].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            opacity = 1 - (dist / 120);
-            ctx.strokeStyle = `rgba(${rgb}, ${opacity * 0.4})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(particles[a].x, particles[a].y);
-            ctx.lineTo(particles[b].x, particles[b].y);
-            ctx.stroke();
-          }
-        }
-        // Mouse interaction
-        if (mouse.x !== null) {
-          const dxm = particles[a].x - mouse.x;
-          const dym = particles[a].y - mouse.y;
-          const distM = Math.sqrt(dxm * dxm + dym * dym);
-          if (distM < 180) {
-            opacity = 1 - (distM / 180);
-            ctx.strokeStyle = `rgba(${rgb}, ${opacity * 0.8})`;
-            ctx.lineWidth = 1.2;
-            ctx.beginPath();
-            ctx.moveTo(particles[a].x, particles[a].y);
-            ctx.lineTo(mouse.x, mouse.y);
-            ctx.stroke();
-          }
-        }
-      }
+    // Follow the pointer (mouse, pen or touch) — one update per animation frame
+    let px = 0, py = 0, frame = null;
+    function paintHighlight() {
+      frame = null;
+      codeBg.style.setProperty("--cx", px + "px");
+      codeBg.style.setProperty("--cy", py + "px");
+      const row = Math.max(0, Math.floor((py - padTop) / lineH));
+      codeBg.style.setProperty("--hl-y", (padTop + row * lineH) + "px");
     }
-
-    function animateCanvas() {
-      const rgb = getAccentRGB();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => { p.update(); p.draw(rgb); });
-      connectParticles(rgb);
-      requestAnimationFrame(animateCanvas);
+    function onPointer(e) {
+      px = e.clientX; py = e.clientY;
+      codeBg.classList.add("is-active");
+      if (!frame) frame = requestAnimationFrame(paintHighlight);
     }
-    
-    window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
-    window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
-    
-    resizeCanvas();
-    initParticles();
-    animateCanvas();
+    window.addEventListener("pointermove", onPointer, { passive: true });
+    window.addEventListener("pointerdown", onPointer, { passive: true });
+    document.addEventListener("pointerleave", () => codeBg.classList.remove("is-active"));
+    document.documentElement.addEventListener("mouseleave", () => codeBg.classList.remove("is-active"));
+    window.addEventListener("pointerup", (e) => {
+      if (e.pointerType === "touch") codeBg.classList.remove("is-active");
+    }, { passive: true });
+    window.addEventListener("blur", () => codeBg.classList.remove("is-active"));
   }
 
   /* ---- YouTube demo embeds (click-to-play facade) ---- */
